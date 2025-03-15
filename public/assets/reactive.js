@@ -1,6 +1,6 @@
 document.querySelectorAll('[reactive\\:snapshot]').forEach(el => {
     el.__reactive = JSON.parse(el.getAttribute('reactive:snapshot'));
-    // el.removeAttribute('reactive:snapshot')
+    el.removeAttribute('reactive:snapshot')
 
     initReactiveClick(el);
     initReactiveModel(el);
@@ -27,7 +27,7 @@ function sendRequest(el, addToPayload) {
 
         el.__reactive = snapshot;
 
-        Alpine.morph(el.firstElementChild, html)
+        Alpine.morph(el, html)
 
         updateReactiveModelInputs(el)
     });

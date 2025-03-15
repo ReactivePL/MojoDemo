@@ -20,6 +20,9 @@ use ReactivePL::JSONRenderer;
 use Module::Installed::Tiny qw(module_source);
 use Digest::SHA qw(sha256_hex);
 
+use Mojo::Util qw(xml_escape);
+use Mojo::ByteStream qw(b);
+
 has app => (is => 'ro');
 
 has component_namespaces => (is => 'lazy', isa => ArrayRef[Str]);
@@ -100,17 +103,11 @@ sub initial_render {
 
     my ($html, $snapshot) = $self->to_snapshot($component);
 
-    my $template = <<'HTML';
-        <div reactive:snapshot="<%= $snapshot %>">
-            <%= $html %>
-        </div>
-HTML
+    my $escaped_snapshot = xml_escape($self->json_renderer->render($snapshot));
 
-    return $ReactivePL::CONTROLLER->render_to_string(
-        inline => $template,
-        snapshot => $self->json_renderer->render($snapshot),
-        html => $html,
-    );
+    $html =~ s/^\s*(<[a-z\-]+(?:\s[^\/>]+)*)(\s*)(\/?>)/$1 reactive:snapshot="$escaped_snapshot" $3/m;
+
+    return b($html);
 }
 
 sub from_snapshot {
