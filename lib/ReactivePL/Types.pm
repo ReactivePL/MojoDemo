@@ -14,7 +14,7 @@ use Type::Library -extends => [ 'Types::Standard' ], -declare => qw/
 use Type::Tiny::Class;
 use Types::TypeTiny qw/BoolLike/;
 
-use constant ISO8601_REGEX => /(\d{4}-[01]\d-[0-3]\d)T[0-2]\d:[0-5]\d:[0-5]\d(\.\d+)?([+-][0-2]\d:[0-5]\d|Z)/;
+use constant ISO8601_REGEX => qr{(\d{4}-[01]\d-[0-3]\d)T[0-2]\d:[0-5]\d:[0-5]\d(\.\d+)?([+-][0-2]\d:[0-5]\d|Z)};
 
 my $dt = __PACKAGE__->add_type(
     Type::Tiny::Class->new(
