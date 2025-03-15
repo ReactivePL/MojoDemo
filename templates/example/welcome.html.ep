@@ -1,9 +1,21 @@
 % layout 'default';
 % title 'Welcome';
+% if (0) {
 <h2><%= $msg %></h2>
 <p>
-  This page was generated from the template "templates/example/welcome.html.ep"
-  and the layout "templates/layouts/default.html.ep",
-  <%= link_to 'click here' => url_for %> to reload the page or
-  <%= link_to 'here' => '/index.html' %> to move forward to a static page.
+    This page was generated from the template "templates/example/welcome.html.ep"
+    and the layout "templates/layouts/default.html.ep",
+    <%= link_to 'click here' => url_for %> to reload the page or
+    <%= link_to 'here' => '/index.html' %> to move forward to a static page.
 </p>
+% }
+<%= reactive('Counter') %>
+<%= reactive('Todos') %>
+
+<!-- Alpine Plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/morph@3.x.x/dist/cdn.min.js"></script>
+
+<!-- Alpine Core -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<script src="/assets/reactive.js"></script>
