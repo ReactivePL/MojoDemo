@@ -13,19 +13,16 @@ use Data::Printer;
 
 use Module::Load;
 use Module::Loader;
-use JSON;
 
 use ReactivePL::JSONRenderer;
 
 use Module::Installed::Tiny qw(module_source);
 use Digest::SHA qw(sha256_hex);
 
-use Mojo::Util qw(xml_escape);
-use Mojo::ByteStream qw(b);
+has secret => (is => 'ro', isa => Str);
+has template_renderer => (is => 'ro', isa => InstanceOf['ReactivePL::TemplateRenderer']);
+has component_namespaces => (is => 'ro', isa => ArrayRef[Str]);
 
-has app => (is => 'ro');
-
-has component_namespaces => (is => 'lazy', isa => ArrayRef[Str]);
 has component_map => (is => 'lazy', isa => HashRef[Str]);
 has json_renderer => (is => 'lazy', isa => InstanceOf['ReactivePL::JSONRenderer']);
 
@@ -103,11 +100,7 @@ sub initial_render {
 
     my ($html, $snapshot) = $self->to_snapshot($component);
 
-    my $escaped_snapshot = xml_escape($self->json_renderer->render($snapshot));
-
-    $html =~ s/^\s*(<[a-z\-]+(?:\s[^\/>]+)*)(\s*)(\/?>)/$1 reactive:snapshot="$escaped_snapshot" $3/m;
-
-    return b($html);
+    return $self->template_renderer->inject_snapshot($html, $snapshot);
 }
 
 sub from_snapshot {
@@ -134,10 +127,7 @@ sub to_snapshot {
 
     my $template = $component->render;
 
-    my $html = $ReactivePL::CONTROLLER->render_to_string(
-        inline => $template,
-        %properties,
-    );
+    my $html = $self->template_renderer->render($template, %properties);
 
     my $snapshot = $self->snapshot_data($component);
     $snapshot = $self->json_renderer->process_data($snapshot);
@@ -155,9 +145,31 @@ sub generate_checksum {
 
     my $module_src_digest = sha256_hex(module_source($component_class));
     my $snapshot_digest = sha256_hex($self->json_renderer->canonical_json->encode($snapshot));
-    my $secret_digest = sha256_hex($self->app->secrets->[0]);
+    my $secret_digest = sha256_hex($self->secret);
 
     return sha256_hex(sprintf '%s:%s:%s', $module_src_digest, $snapshot_digest, $secret_digest);
+}
+
+sub process_request {
+    my $self = shift;
+    my $payload = shift;
+
+    my $component = $self->from_snapshot($payload->{snapshot});
+
+    if (my $method = $payload->{callMethod}) {
+        $self->call_method($component, $method);
+    }
+
+    if (my $update = $payload->{updateProperty}) {
+        $self->update_property($component, @{$update})
+    }
+
+    my ($html, $snapshot) = $self->to_snapshot($component);
+
+    return {
+        html => $html,
+        snapshot => $snapshot,
+    };
 }
 
 sub call_method {
@@ -179,14 +191,6 @@ sub update_property {
     if ($component->can('updated')) {
         $component->updated($property);
     }
-}
-
-sub _build_component_namespaces {
-    my $self = shift;
-    # TODO: Make this configurable
-    return [qw/
-        ReactivePL::Reactive::Components
-    /];
 }
 
 sub _build_component_map {
