@@ -23,7 +23,7 @@ has search => (is => 'rw', isa => Str, default => sub {''});
 sub _schema {
     my $self = shift;
 
-    return ReactivePL::Types->dbic_schema();
+    return Reactive::Core::Types->dbic_schema();
 }
 
 sub results {

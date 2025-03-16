@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious', -signatures;
 
 use Sub::Override;
 
-use ReactivePL::Types;
+use Reactive::Core::Types;
 use ReactivePL::Schema;
 
 my $override = Sub::Override->new;
@@ -18,7 +18,7 @@ sub startup ($self) {
     $self->secrets($config->{secrets});
 
     $self->plugin(
-        'ReactivePL::Reactive::Mojolicious::Plugin',
+        'Reactive::Mojo::Plugin',
         {
             namespaces => [
                 'ReactivePL::Reactive::Components',
@@ -32,7 +32,7 @@ sub startup ($self) {
         $config->{database}{password}
     );
 
-    $override->replace('ReactivePL::Types::dbic_schema', sub { $schema });
+    $override->replace('Reactive::Core::Types::dbic_schema', sub { $schema });
 
     $self->helper(schema => sub {
         return $schema;

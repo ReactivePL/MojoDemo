@@ -13,10 +13,4 @@
 <%= reactive('Todos') %>
 <%= reactive('PostForm', post => 1) %>
 
-<!-- Alpine Plugins -->
-<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/morph@3.x.x/dist/cdn.min.js"></script>
-
-<!-- Alpine Core -->
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-<script src="/assets/reactive.js"></script>
+<%= reactive_js %>

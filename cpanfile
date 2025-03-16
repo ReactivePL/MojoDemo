@@ -17,3 +17,6 @@ requires 'DBIx::Class::Schema::Loader';
 requires 'DBD::mysql';
 
 requires 'Sub::Override';
+
+requires 'Reactive::Core', git => 'https://github.com/ReactivePL/Core.git';
+requires 'Reactive::Mojo', git => 'https://github.com/ReactivePL/Mojo.git';

@@ -6,7 +6,7 @@ use strict;
 use Moo;
 use namespace::clean;
 use Types::Standard qw( Str Int Enum Undef ArrayRef Object Maybe );
-use ReactivePL::Types qw(DateTime);
+use Reactive::Core::Types qw(DateTime);
 
 has todos => (is => 'rw', isa => ArrayRef[Str], default => sub { return [qw/One Two Three/] });
 has draft => (is => 'rw', isa => Str->plus_coercions(Undef, q{ '' }), coerce => 1);
