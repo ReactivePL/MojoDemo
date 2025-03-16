@@ -161,7 +161,23 @@ sub process_request {
     }
 
     if (my $update = $payload->{updateProperty}) {
-        $self->update_property($component, @{$update})
+        $self->update_property($component, @{$update});
+    }
+
+    if (my $increment = $payload->{increment}) {
+        $self->update_property(
+            $component,
+            $increment,
+            $payload->{snapshot}{data}{$increment} + 1
+        );
+    }
+
+    if (my $decrement = $payload->{decrement}) {
+        $self->update_property(
+            $component,
+            $decrement,
+            $payload->{snapshot}{data}{$decrement} - 1
+        );
     }
 
     my ($html, $snapshot) = $self->to_snapshot($component);

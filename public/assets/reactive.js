@@ -3,6 +3,8 @@ document.querySelectorAll('[reactive\\:snapshot]').forEach(el => {
     el.removeAttribute('reactive:snapshot')
 
     initReactiveClick(el);
+    initReactiveClickIncrement(el);
+    initReactiveClickDecrement(el);
     initReactiveModel(el);
     initReactiveModelLazy(el);
 });
@@ -90,5 +92,26 @@ function initReactiveModelLazy(rootElement) {
         sendRequest(rootElement, {
             updateProperty: [property, value],
         });
+    })
+}
+
+function initReactiveClickIncrement(rootElement) {
+    initReactiveClickCommon(rootElement, 'increment');
+}
+
+function initReactiveClickDecrement(rootElement) {
+    initReactiveClickCommon(rootElement, 'decrement');
+}
+
+function initReactiveClickCommon(rootElement, action) {
+    rootElement.addEventListener('click', e => {
+        if (! e.target.hasAttribute(`reactive:click.${action}`)) return;
+
+        let value = e.target.getAttribute(`reactive:click.${action}`);
+
+        let data = {};
+        data[action] = value;
+
+        sendRequest(rootElement, data);
     })
 }
