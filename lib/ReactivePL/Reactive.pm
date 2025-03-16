@@ -180,6 +180,14 @@ sub process_request {
         );
     }
 
+    if (my $unset = $payload->{unset}) {
+        $self->update_property(
+            $component,
+            $unset,
+            undef
+        );
+    }
+
     my ($html, $snapshot) = $self->to_snapshot($component);
 
     return {

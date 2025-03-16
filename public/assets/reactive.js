@@ -5,6 +5,7 @@ document.querySelectorAll('[reactive\\:snapshot]').forEach(el => {
     initReactiveClick(el);
     initReactiveClickIncrement(el);
     initReactiveClickDecrement(el);
+    initReactiveClickUnset(el);
     initReactiveModel(el);
     initReactiveModelLazy(el);
 });
@@ -101,6 +102,10 @@ function initReactiveClickIncrement(rootElement) {
 
 function initReactiveClickDecrement(rootElement) {
     initReactiveClickCommon(rootElement, 'decrement');
+}
+
+function initReactiveClickUnset(rootElement) {
+    initReactiveClickCommon(rootElement, 'unset');
 }
 
 function initReactiveClickCommon(rootElement, action) {
