@@ -30,12 +30,13 @@ sub escape {
     return xml_escape($string);
 }
 
-sub inject_snapshot {
+sub inject_attribute {
     my $self = shift;
     my $html = shift;
-    my $snapshot = shift;
+    my $attribute = shift;
+    my $value = shift;
 
-    my $result = $self->SUPER::inject_snapshot($html, $snapshot);
+    my $result = $self->SUPER::inject_attribute($html, $attribute, $value);
 
     return b($result);
 }

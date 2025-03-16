@@ -31,9 +31,18 @@ sub inject_snapshot {
     my $html = shift;
     my $snapshot = shift;
 
-    my $escaped_snapshot = $self->escape($self->json_renderer->render($snapshot));
+    return $self->inject_attribute($html, 'reactive:snapshot', $snapshot);
+}
 
-    $html =~ s/^\s*(<[a-z\-]+(?:\s[^\/>]+)*)(\s*)(\/?>)/$1 reactive:snapshot="$escaped_snapshot" $3/m;
+sub inject_attribute {
+    my $self = shift;
+    my $html = shift;
+    my $attribute = shift;
+    my $value = shift;
+
+    my $escaped_value = $self->escape($self->json_renderer->render($value));
+
+    $html =~ s/^\s*(<[a-z\-]+(?:\s[^\/>]+)*)(\s*)(\/?>)/$1 $attribute="$escaped_value" $3/m;
 
     return $html;
 }
