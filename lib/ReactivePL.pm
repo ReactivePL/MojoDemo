@@ -32,6 +32,8 @@ sub startup ($self) {
         $config->{database}{password}
     );
 
+    # Bit of a hack but this is required for DBIx::Class::Result properties in
+    # components to work, we need to provide the $schema instance
     $override->replace('Reactive::Core::Types::dbic_schema', sub { $schema });
 
     $self->helper(schema => sub {
@@ -41,37 +43,10 @@ sub startup ($self) {
     # Router
     my $r = $self->routes;
 
-    $r->add_shortcut(resource => sub ($r, $name) {
-        # Prefix for resource
-        my $resource = $r->any("/$name")->to("$name#");
-
-        # Render a list of resources
-        $resource->get('/')->to('#index')->name($name);
-
-        # Render a form to create a new resource (submitted to "store")
-        $resource->get('/create')->to('#create')->name("create_$name");
-
-        # Store newly created resource (submitted by "create")
-        $resource->post->to('#store')->name("store_$name");
-
-        # Render a specific resource
-        $resource->get('/:id')->to('#show')->name("show_$name");
-
-        # Render a form to edit a resource (submitted to "update")
-        $resource->get('/:id/edit')->to('#edit')->name("edit_$name");
-
-        # Store updated resource (submitted by "edit")
-        $resource->put('/:id')->to('#update')->name("update_$name");
-
-        # Remove a resource
-        $resource->delete('/:id')->to('#remove')->name("remove_$name");
-
-        return $resource;
-    });
-
     # Normal route to controller
     $r->get('/')->to('Example#welcome');
-    $r->resource('posts');
+
+    $r->get('/posts')->to('Posts#index');
 }
 
 1;
