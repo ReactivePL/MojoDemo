@@ -35,10 +35,6 @@ sub initialize_component {
 
     my $component = $component_class->new(%args);
 
-    if ($component->can('mounted')) {
-        $component->mounted();
-    }
-
     return $component;
 }
 
@@ -97,6 +93,10 @@ sub initial_render {
     my %args = @_;
 
     my $component = $self->initialize_component($component_name, %args);
+
+    if ($component->can('mounted')) {
+        $component->mounted();
+    }
 
     my ($html, $snapshot) = $self->to_snapshot($component);
 
