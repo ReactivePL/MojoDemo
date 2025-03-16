@@ -1,6 +1,9 @@
 package ReactivePL;
 use Mojo::Base 'Mojolicious', -signatures;
 
+use ReactivePL::Types;
+use ReactivePL::Schema;
+
 # This method will run once at server start
 sub startup ($self) {
 
@@ -18,6 +21,18 @@ sub startup ($self) {
             ],
         },
     );
+
+    my $schema = ReactivePL::Schema->connect(
+        $config->{database}{dsn},
+        $config->{database}{username},
+        $config->{database}{password}
+    );
+
+    *ReactivePL::Types::dbic_schema = sub { $schema };
+
+    $self->helper(schema => sub {
+        return $schema;
+    });
 
     # Router
     my $r = $self->routes;

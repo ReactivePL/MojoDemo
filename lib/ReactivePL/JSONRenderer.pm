@@ -6,7 +6,7 @@ use strict;
 use Moo;
 
 use Types::Standard qw( is_Bool is_Str is_Num is_HashRef is_ArrayRef InstanceOf );
-use ReactivePL::Types qw( is_Boolean is_DateTime );
+use ReactivePL::Types qw( is_Boolean is_DateTime is_DBIx is_SerializedDBIx to_SerializedDBIx);
 
 use DateTime::Format::ISO8601;
 use JSON::MaybeXS;
@@ -27,12 +27,16 @@ sub process_data {
     my $self = shift;
     my $data = shift;
 
-    if (is_Boolean($data) || is_Str($data) || is_Num($data)) {
+    if (is_Boolean($data) || is_Str($data) || is_Num($data) || is_SerializedDBIx($data)) {
         return $data;
     }
 
     if (is_DateTime($data)) {
         return DateTime::Format::ISO8601->format_datetime($data);
+    }
+
+    if (is_DBIx($data)) {
+        return to_SerializedDBIx($data);
     }
 
     if (is_ArrayRef($data)) {
