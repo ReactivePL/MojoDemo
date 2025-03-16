@@ -7,7 +7,7 @@ use Moo;
 use namespace::clean;
 
 use Types::Standard qw( Str Int Enum ArrayRef Object );
-use ReactivePL::Types qw( DBIx );
+use Reactive::Core::Types qw( DBIx );
 
 use Data::Printer;
 
