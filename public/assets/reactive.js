@@ -41,6 +41,12 @@ function updateReactiveModelInputs(rootElement) {
 
         el.value = data[property]
     })
+
+    rootElement.querySelectorAll('[reactive\\:model\\.lazy]').forEach(el => {
+        let property = el.getAttribute('reactive:model.lazy')
+
+        el.value = data[property]
+    })
 }
 
 function initReactiveClick(rootElement) {
