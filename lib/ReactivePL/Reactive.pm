@@ -127,7 +127,7 @@ sub to_snapshot {
 
     my $template = $component->render;
 
-    my $html = $self->template_renderer->render($template, %properties);
+    my $html = $self->template_renderer->render($template, %properties, self => $component);
 
     my $snapshot = $self->snapshot_data($component);
     $snapshot = $self->json_renderer->process_data($snapshot);

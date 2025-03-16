@@ -15,3 +15,5 @@ requires 'Module::Installed::Tiny';
 requires 'DBIx::Class';
 requires 'DBIx::Class::Schema::Loader';
 requires 'DBD::mysql';
+
+requires 'Sub::Override';
