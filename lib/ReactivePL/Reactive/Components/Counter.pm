@@ -5,9 +5,8 @@ use strict;
 
 use Moo;
 use namespace::clean;
-use Types::Standard qw( Str Int Enum ArrayRef Object );
 
-use Data::Printer;
+use Types::Standard qw( Int );
 
 has count => (is => 'rw', isa => Int, default => sub { return 0 });
 
